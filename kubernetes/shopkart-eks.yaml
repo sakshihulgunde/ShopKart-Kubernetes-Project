@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shopkart
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shopkart
+  template:
+    metadata:
+      labels:
+        app: shopkart
+    spec:
+      containers:
+        - name: shopkart-container
+          image: 452183714498.dkr.ecr.ap-south-1.amazonaws.com/shopkart:1.0
+          ports:
+            - containerPort: 5000
+          resources:
+            requests:
+              cpu: "0.25"
+              memory: "512Mi"
+            limits:
+              cpu: "0.5"
+              memory: "1Gi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shopkart-service
+  namespace: default
+spec:
+  selector:
+    app: shopkart
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: LoadBalancer
