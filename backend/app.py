@@ -1,8 +1,13 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
 CORS(app)
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
 
 products = [
     {
@@ -36,14 +41,19 @@ products = [
 ]
 
 
+# ================= FRONTEND =================
+
 @app.route("/")
 def home():
-    return jsonify({
-        "application": "ShopKart",
-        "message": "ShopKart E-Commerce Application is running",
-        "version": "1.0"
-    })
+    return send_from_directory(FRONTEND_DIR, "index.html")
 
+
+@app.route("/frontend/<path:filename>")
+def frontend_files(filename):
+    return send_from_directory(FRONTEND_DIR, filename)
+
+
+# ================= API =================
 
 @app.route("/health")
 def health():
@@ -59,19 +69,27 @@ def get_products():
 
 @app.route("/api/products/<int:product_id>")
 def get_product(product_id):
+
     product = next(
-        (product for product in products if product["id"] == product_id),
+        (
+            product
+            for product in products
+            if product["id"] == product_id
+        ),
         None
     )
 
     if product is None:
-        return jsonify({"error": "Product not found"}), 404
+        return jsonify({
+            "error": "Product not found"
+        }), 404
 
     return jsonify(product)
 
 
 @app.route("/api/orders", methods=["POST"])
 def create_order():
+
     data = request.get_json()
 
     if not data:
@@ -86,4 +104,7 @@ def create_order():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    app.run(
+        host="0.0.0.0",
+        port=5000
+    )

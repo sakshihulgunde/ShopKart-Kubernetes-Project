@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopKart - Online Shopping</title>
+
+    <link rel="stylesheet" href="/frontend/styles.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="navbar">
+
+    <div class="logo" onclick="showHome()">
+        <span class="logo-icon">🛒</span>
+        <span>Shop<span>Kart</span></span>
+    </div>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search for products..."
+            oninput="searchProducts()"
+        >
+        <button onclick="searchProducts()">🔍</button>
+    </div>
+
+    <nav class="nav-links">
+        <button onclick="showHome()">Home</button>
+        <button onclick="showProducts()">Products</button>
+
+        <button class="cart-button" onclick="toggleCart()">
+            🛒 Cart
+            <span id="cartCount">0</span>
+        </button>
+
+        <button onclick="openLogin()">👤 Login</button>
+    </nav>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero" id="homeSection">
+
+    <div class="hero-content">
+
+        <p class="hero-small">WELCOME TO SHOPKART</p>
+
+        <h1>
+            Everything You Need,
+            <span>All in One Place.</span>
+        </h1>
+
+        <p>
+            Discover electronics, accessories and smart products
+            at great prices.
+        </p>
+
+        <button class="shop-now" onclick="showProducts()">
+            Shop Now →
+        </button>
+
+    </div>
+
+    <div class="hero-art">
+        <div class="floating-card card-one">💻</div>
+        <div class="floating-card card-two">📱</div>
+        <div class="floating-card card-three">🎧</div>
+
+        <div class="hero-cart">
+            🛍️
+        </div>
+    </div>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<section class="categories">
+
+    <div class="section-title">
+        <div>
+            <p class="section-label">SHOP BY CATEGORY</p>
+            <h2>Find What You Need</h2>
+        </div>
+    </div>
+
+    <div class="category-grid">
+
+        <button onclick="filterCategory('Electronics')">
+            <span>💻</span>
+            <strong>Electronics</strong>
+            <small>Devices & Gadgets</small>
+        </button>
+
+        <button onclick="filterCategory('Accessories')">
+            <span>🎧</span>
+            <strong>Accessories</strong>
+            <small>Everyday Essentials</small>
+        </button>
+
+        <button onclick="filterCategory('Wearables')">
+            <span>⌚</span>
+            <strong>Wearables</strong>
+            <small>Smart Technology</small>
+        </button>
+
+        <button onclick="showProducts()">
+            <span>🛍️</span>
+            <strong>All Products</strong>
+            <small>Explore ShopKart</small>
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- ================= PRODUCTS ================= -->
+
+<section class="products-section" id="productsSection">
+
+    <div class="section-header">
+
+        <div>
+            <p class="section-label">OUR COLLECTION</p>
+            <h2>Popular Products</h2>
+        </div>
+
+        <button class="view-all" onclick="showProducts()">
+            View All →
+        </button>
+
+    </div>
+
+    <div id="productGrid" class="product-grid">
+
+        <div class="loading">
+            Loading products...
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CART DRAWER ================= -->
+
+<div id="cartOverlay" class="overlay" onclick="toggleCart()"></div>
+
+<aside id="cartDrawer" class="cart-drawer">
+
+    <div class="cart-header">
+
+        <div>
+            <p class="section-label">YOUR SHOPPING BAG</p>
+            <h2>Your Cart</h2>
+        </div>
+
+        <button onclick="toggleCart()" class="close-button">
+            ✕
+        </button>
+
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-footer">
+
+        <div class="subtotal">
+            <span>Subtotal</span>
+            <strong id="cartTotal">₹0</strong>
+        </div>
+
+        <button class="checkout-button" onclick="openCheckout()">
+            Proceed to Checkout →
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= PRODUCT MODAL ================= -->
+
+<div id="productModal" class="modal-overlay">
+
+    <div class="modal">
+
+        <button class="modal-close" onclick="closeProductModal()">
+            ✕
+        </button>
+
+        <div id="productDetails"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= LOGIN MODAL ================= -->
+
+<div id="loginModal" class="modal-overlay">
+
+    <div class="modal small-modal">
+
+        <button class="modal-close" onclick="closeLogin()">
+            ✕
+        </button>
+
+        <div class="login-icon">👤</div>
+
+        <h2>Welcome to ShopKart</h2>
+
+        <p class="modal-subtitle">
+            Login to continue shopping
+        </p>
+
+        <input
+            type="email"
+            id="loginEmail"
+            placeholder="Email address"
+        >
+
+        <input
+            type="password"
+            id="loginPassword"
+            placeholder="Password"
+        >
+
+        <button class="primary-button" onclick="loginUser()">
+            Login
+        </button>
+
+        <p id="loginMessage" class="form-message"></p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CHECKOUT MODAL ================= -->
+
+<div id="checkoutModal" class="modal-overlay">
+
+    <div class="modal checkout-modal">
+
+        <button class="modal-close" onclick="closeCheckout()">
+            ✕
+        </button>
+
+        <p class="section-label">CHECKOUT</p>
+
+        <h2>Complete Your Order</h2>
+
+        <form id="checkoutForm">
+
+            <label>Full Name</label>
+            <input
+                id="customerName"
+                type="text"
+                placeholder="Enter your name"
+                required
+            >
+
+            <label>Email</label>
+            <input
+                id="customerEmail"
+                type="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label>Delivery Address</label>
+            <textarea
+                id="customerAddress"
+                placeholder="Enter delivery address"
+                required
+            ></textarea>
+
+            <div class="checkout-total">
+                Total:
+                <strong id="checkoutTotal">₹0</strong>
+            </div>
+
+            <button class="primary-button" type="submit">
+                Place Order
+            </button>
+
+        </form>
+
+        <div id="orderMessage"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-brand">
+        <div class="logo">
+            <span class="logo-icon">🛒</span>
+            Shop<span>Kart</span>
+        </div>
+
+        <p>
+            Your simple cloud-native e-commerce platform.
+        </p>
+    </div>
+
+    <div>
+        <h4>Shop</h4>
+        <p onclick="showProducts()">Products</p>
+        <p onclick="filterCategory('Electronics')">Electronics</p>
+        <p onclick="filterCategory('Accessories')">Accessories</p>
+    </div>
+
+    <div>
+        <h4>Technology</h4>
+        <p>Docker</p>
+        <p>Kubernetes</p>
+        <p>Amazon ECR</p>
+        <p>Amazon EKS</p>
+    </div>
+
+    <div>
+        <h4>ShopKart</h4>
+        <p>Cloud-Native</p>
+        <p>Scalable</p>
+        <p>Containerized</p>
+    </div>
+
+</footer>
+
+<div class="copyright">
+    © 2026 ShopKart. Built as a DevOps & Kubernetes learning project.
+</div>
+
+
+<script src="/frontend/app.js"></script>
+
+</body>
+</html>
